@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA Funded Risk Calculator v0.7</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="glow-orb-1"></div>
+<div class="glow-orb-2"></div>
+
+<div class="container">
+
+    <header class="header-glass">
+        <div class="header-inner">
+            <div class="logo-wrapper">
+                <img src="{{ url_for('static', filename='dna_logo.png') }}" alt="DNA">
+            </div>
+            <div class="header-center">
+                <h1 class="main-title">DNA Risk Calculator</h1>
+                <p class="subtitle">Professional Prop Firm Risk Manager</p>
+            </div>
+            <div class="logo-wrapper">
+                <img src="{{ url_for('static', filename='zaraza_logo.png') }}" alt="Zaraza">
+            </div>
+        </div>
+    </header>
+
+    <div class="main-grid">
+
+        <div class="form-card">
+            <h2>Configuraci&oacute;n</h2>
+            <form method="POST">
+                <div class="input-group">
+                    <select name="challenge" id="challenge" required>
+                        {% for challenge in challenges.keys() %}
+                        <option value="{{ challenge }}">{{ challenge }}</option>
+                        {% endfor %}
+                    </select>
+                    <label for="challenge">Challenge</label>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <select name="fase" id="fase" required>
+                            <option value="1">Fase 1</option>
+                            <option value="2">Fase 2</option>
+                        </select>
+                        <label for="fase">Fase</label>
+                    </div>
+                    <div class="input-group">
+                        <select name="cuenta" id="cuenta" required>
+                            <option value="5000">$5,000</option>
+                            <option value="10000">$10,000</option>
+                            <option value="25000">$25,000</option>
+                            <option value="50000">$50,000</option>
+                            <option value="100000">$100,000</option>
+                            <option value="200000">$200,000</option>
+                        </select>
+                        <label for="cuenta">Tama&ntilde;o Cuenta</label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <select name="instrumento" id="instrumento" required>
+                        <option value="EURUSD">EUR/USD</option>
+                        <option value="GBPUSD">GBP/USD</option>
+                        <option value="USDJPY">USD/JPY</option>
+                        <option value="XAUUSD">XAU/USD (Gold)</option>
+                        <option value="BTCUSD">BTC/USD</option>
+                        <option value="US30">US30 (Dow)</option>
+                        <option value="NAS100">NAS100 (Nasdaq)</option>
+                    </select>
+                    <label for="instrumento">Instrumento</label>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <input type="number" step="0.01" name="balance" id="balance" placeholder=" " required>
+                        <label for="balance">Balance Actual ($)</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" step="0.01" name="riesgo" id="riesgo" placeholder=" " required>
+                        <label for="riesgo">Riesgo (%)</label>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <input type="number" step="0.01" name="entrada" id="entrada" placeholder=" " required>
+                        <label for="entrada">Precio Entrada</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="number" step="0.01" name="stop" id="stop" placeholder=" " required>
+                        <label for="stop">Stop Loss</label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <input type="number" step="0.01" name="take" id="take" placeholder=" " required>
+                    <label for="take">Take Profit</label>
+                </div>
+
+                <button type="submit" class="btn-primary">Calcular Operaci&oacute;n</button>
+            </form>
+        </div>
+
+        {% if resultado %}
+        <div class="results-panel">
+
+            <div class="kpi-grid">
+                <div class="kpi-card risk">
+                    <div class="kpi-label">Riesgo</div>
+                    <div class="kpi-value"><span class="countup" data-target="{{ resultado.riesgo_dinero }}" data-prefix="$" data-decimals="2">$0.00</span></div>
+                </div>
+                <div class="kpi-card gain">
+                    <div class="kpi-label">Ganancia TP</div>
+                    <div class="kpi-value"><span class="countup" data-target="{{ resultado.valor_tp_usd }}" data-prefix="$" data-decimals="2">$0.00</span></div>
+                </div>
+                <div class="kpi-card rr">
+                    <div class="kpi-label">R:R</div>
+                    <div class="kpi-value"><span class="countup" data-target="{{ resultado.rr }}" data-decimals="2">0.00</span></div>
+                </div>
+                <div class="kpi-card lots">
+                    <div class="kpi-label">Lotes</div>
+                    <div class="kpi-value"><span class="countup" data-target="{{ resultado.lotes }}" data-decimals="2">0.00</span></div>
+                </div>
+            </div>
+
+            <div class="results-grid">
+
+                <div class="detail-card">
+                    <h3>Operaci&oacute;n</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Distancia SL</span>
+                        <span class="detail-value">{{ resultado.distancia_sl }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Distancia TP</span>
+                        <span class="detail-value blue">{{ resultado.distancia_tp }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">SL en {{ resultado.unidad }}</span>
+                        <span class="detail-value red">{{ resultado.pips_sl }} {{ resultado.unidad }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">TP en {{ resultado.unidad }}</span>
+                        <span class="detail-value green">{{ resultado.pips_tp }} {{ resultado.unidad }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Perfil</span>
+                        <span class="detail-value">{{ resultado.perfil }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3>Instrumento</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Instrumento</span>
+                        <span class="detail-value blue">{{ resultado.instrumento }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Tipo</span>
+                        <span class="detail-value">{{ resultado.tipo }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">RR Ratio</span>
+                        <span class="detail-value {% if resultado.rr >= 2 %}green{% elif resultado.rr >= 1 %}yellow{% else %}red{% endif %}">{{ resultado.rr }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Valor SL USD</span>
+                        <span class="detail-value red">${{ resultado.valor_sl_usd }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Valor TP USD</span>
+                        <span class="detail-value green">${{ resultado.valor_tp_usd }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Lotes</span>
+                        <span class="detail-value">{{ resultado.lotes }}</span>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3>Challenge</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Fase</span>
+                        <span class="detail-value blue">{{ resultado.fase }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Objetivo</span>
+                        <span class="detail-value">{{ resultado.target_porcentaje }}%</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Faltante</span>
+                        <span class="detail-value"><span class="countup" data-target="{{ resultado.faltante_usd }}" data-prefix="$" data-decimals="2">$0.00</span></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Ops. Restantes</span>
+                        <span class="detail-value">{{ resultado.operaciones_restantes }}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payout Estimado</span>
+                        <span class="detail-value green"><span class="countup" data-target="{{ resultado.payout_estimate }}" data-prefix="$" data-decimals="2">$0.00</span></span>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <h3>L&iacute;mites</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Max Daily Loss</span>
+                        <span class="detail-value red">$<span class="countup" data-target="{{ resultado.daily_loss_usd }}" data-decimals="2">0.00</span></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Max Drawdown</span>
+                        <span class="detail-value red">$<span class="countup" data-target="{{ resultado.max_loss_usd }}" data-decimals="2">0.00</span> ({{ resultado.max_loss_label }})</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Trades Perdedores</span>
+                        <span class="detail-value {% if resultado.operaciones_perdedoras <= 3 %}red{% else %}green{% endif %}">{{ resultado.operaciones_perdedoras }}</span>
+                    </div>
+                    <div class="daily-loss-row">
+                        <span class="detail-label">Daily Loss usado</span>
+                        <div class="daily-loss-bar-wrap">
+                            <div class="daily-loss-bar-fill" style="width: {{ resultado.risk_daily_pct }}%;"></div>
+                        </div>
+                        <span class="daily-loss-pct {% if resultado.risk_daily_pct > 50 %}red{% elif resultado.risk_daily_pct > 25 %}yellow{% else %}green{% endif %}">{{ resultado.risk_daily_pct }}%</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Daily Loss Restante</span>
+                        <span class="detail-value blue">${{ "{:,.2f}".format(resultado.daily_loss_remaining) }}</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="results-grid">
+                <div class="detail-card">
+                    <h3>Simulador de P&eacute;rdidas</h3>
+                    <div class="sim-row">
+                        <span class="sim-label">Balance actual</span>
+                        <span class="sim-value">${{ "{:,.2f}".format(resultado.balance_actual) }}</span>
+                    </div>
+                    <div class="sim-row">
+                        <span class="sim-label">1 p&eacute;rdida</span>
+                        <span class="sim-value">${{ "{:,.2f}".format(resultado.sim_1_loss) }}</span>
+                    </div>
+                    <div class="sim-row">
+                        <span class="sim-label">2 p&eacute;rdidas</span>
+                        <span class="sim-value">${{ "{:,.2f}".format(resultado.sim_2_losses) }}</span>
+                    </div>
+                    <div class="sim-row">
+                        <span class="sim-label">3 p&eacute;rdidas</span>
+                        <span class="sim-value">${{ "{:,.2f}".format(resultado.sim_3_losses) }}</span>
+                    </div>
+                    <div class="sim-row">
+                        <span class="sim-label">5 p&eacute;rdidas</span>
+                        <span class="sim-value">${{ "{:,.2f}".format(resultado.sim_5_losses) }}</span>
+                    </div>
+                    <div class="sim-blowout {% if resultado.blowout_risk == 'Alta' %}high{% elif resultado.blowout_risk == 'Moderada' %}medium{% else %}low{% endif %}">
+                        Riesgo de blowout: {{ resultado.blowout_risk }}
+                    </div>
+                </div>
+
+                <div class="warning-badge {% if 'Riesgo elevado' in resultado.advertencia %}{% else %}success{% endif %}">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: {% if 'Riesgo elevado' in resultado.advertencia %}#f59e0b{% else %}#22c55e{% endif %}; flex-shrink: 0;">
+                        {% if 'Riesgo elevado' in resultado.advertencia %}
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                        {% else %}
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                        {% endif %}
+                    </svg>
+                    <p>{{ resultado.advertencia }}</p>
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+
+    </div>
+
+    {% if resultado %}
+    {% set max_loss_pct = challenge_info["max_loss"] if challenge_info and challenge_info["max_loss"] else 1 %}
+    {% set dd_bar_w = ((resultado.drawdown_pct / max_loss_pct * 100) if max_loss_pct > 0 else 0) | round(1) %}
+    <div class="progress-card">
+        <div class="progress-header">
+            <h2>Estado del Challenge</h2>
+            <div class="progress-stats">
+                <div class="progress-stat">
+                    <div class="stat-value {% if resultado.profit_actual < 0 %}red{% else %}green{% endif %}"><span class="countup" data-target="{{ resultado.profit_actual }}" data-prefix="$" data-decimals="2">$0.00</span></div>
+                    <div class="stat-label">P&amp;L Actual</div>
+                </div>
+                <div class="progress-stat">
+                    <div class="stat-value"><span class="countup" data-target="{{ resultado.target_usd }}" data-prefix="$" data-decimals="2">$0.00</span></div>
+                    <div class="stat-label">Target</div>
+                </div>
+                <div class="progress-stat">
+                    {% if resultado.profit_actual >= 0 %}
+                    <div class="stat-value" style="color: {% if resultado.progreso_porcentaje >= 100 %}#22c55e{% elif resultado.progreso_porcentaje >= 50 %}#38bdf8{% else %}#f59e0b{% endif %};">{{ resultado.progreso_porcentaje }}%</div>
+                    <div class="stat-label">Progreso</div>
+                    {% else %}
+                    <div class="stat-value red">{{ "%0.2f"|format(resultado.drawdown_pct) }}%</div>
+                    <div class="stat-label">Drawdown</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="progress-bar-wrapper">
+            {% if resultado.profit_actual >= 0 %}
+            <div class="progress-fill" style="width: {{ resultado.progreso_porcentaje }}%;">
+                <span>{{ resultado.progreso_porcentaje }}%</span>
+            </div>
+            {% else %}
+            <div class="progress-fill negative" style="width: {{ dd_bar_w }}%;">
+                <span>-{{ "%0.2f"|format(resultado.drawdown_pct) }}%</span>
+            </div>
+            {% endif %}
+        </div>
+        <div class="progress-ratio">
+            {% if resultado.profit_actual >= 0 %}
+            <strong>${{ "{:,.2f}".format(resultado.profit_actual) }}</strong> de <strong>${{ "{:,.2f}".format(resultado.target_usd) }}</strong>
+            {% else %}
+            <strong style="color: #ef4444;">-${{ "{:,.2f}".format(resultado.profit_actual|abs) }}</strong> de <strong>${{ "{:,.2f}".format(resultado.target_usd) }}</strong> &middot; Drawdown: <strong style="color: {% if resultado.balance_status == 'critical' %}#ef4444{% elif resultado.balance_status == 'warning' %}#f59e0b{% else %}#eab308{% endif %};">{{ "%0.2f"|format(resultado.drawdown_pct) }}%</strong>
+            {% endif %}
+        </div>
+
+        <hr class="balance-divider">
+
+        <div class="balance-header">
+            <h3>Salud del Balance</h3>
+            <span class="balance-status-badge {{ resultado.balance_status }}">
+                {% if resultado.balance_status == 'normal' %}Saludable
+                {% elif resultado.balance_status == 'caution' %}Precauci&oacute;n
+                {% elif resultado.balance_status == 'warning' %}Advertencia
+                {% else %}Cr&iacute;tico{% endif %}
+            </span>
+        </div>
+        <div class="balance-track">
+            <div class="balance-fill {{ resultado.balance_status }}" style="width: {{ dd_bar_w }}%;"></div>
+            <div class="balance-marker" style="left: {{ dd_bar_w }}%;"></div>
+        </div>
+        <div class="balance-info">
+            <div class="balance-info-item">
+                <span class="label">Drawdown:</span>
+                <span class="value {{ resultado.balance_status }}">{{ "%0.2f"|format(resultado.drawdown_pct) }}%</span>
+            </div>
+            <div class="balance-info-item">
+                <span class="label">Max Loss:</span>
+                <span class="value">{{ challenge_info["max_loss"] }}%</span>
+            </div>
+            <div class="balance-info-item">
+                <span class="label">Restante:</span>
+                <span class="value {{ resultado.balance_status }}">{{ "%0.2f"|format(resultado.drawdown_remaining_pct) }}%</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <footer class="footer">
+        <p>DNA Funded Risk Calculator v0.7</p>
+        <p>Designed by <strong>Zaraza</strong> &mdash; Powered by <strong>DNA Funded</strong></p>
+    </footer>
+
+</div>
+
+<script>
+(function() {
+    'use strict';
+
+    document.querySelectorAll('.input-group select').forEach(function(select) {
+        function update() {
+            select.closest('.input-group').classList.toggle('has-value', select.value !== '');
+        }
+        select.addEventListener('change', update);
+        select.addEventListener('focus', function() {
+            select.closest('.input-group').classList.add('has-value');
+        });
+        select.addEventListener('blur', function() {
+            if (select.value === '') {
+                select.closest('.input-group').classList.remove('has-value');
+            }
+        });
+        update();
+    });
+
+    function fmt(n, d) {
+        return n.toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+    }
+
+    function animate(el) {
+        var target = parseFloat(el.getAttribute('data-target'));
+        if (isNaN(target)) { el.textContent = el.getAttribute('data-prefix') || '' + '0.00'; return; }
+        var prefix = el.getAttribute('data-prefix') || '';
+        var suffix = el.getAttribute('data-suffix') || '';
+        var decimals = parseInt(el.getAttribute('data-decimals')) || 2;
+        var duration = 900;
+        var start = performance.now();
+
+        function update(now) {
+            var elapsed = now - start;
+            var progress = Math.min(elapsed / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            var current = eased * target;
+            el.textContent = prefix + fmt(current, decimals) + suffix;
+            if (progress < 1) requestAnimationFrame(update);
+        }
+        requestAnimationFrame(update);
+    }
+
+    var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+                animate(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.3 });
+
+    document.querySelectorAll('.countup').forEach(function(el) {
+        observer.observe(el);
+    });
+})();
+</script>
+
+</body>
+</html>
