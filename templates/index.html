@@ -23,7 +23,7 @@
                 <p class="subtitle" data-i18n="header.subtitle">Professional Prop Firm Risk Manager</p>
             </div>
             <div class="header-right">
-                <div class="logo-wrapper">
+                <div class="logo-wrapper logo-zaraza">
                     <img src="{{ url_for('static', filename='zaraza_logo.png') }}" alt="Zaraza">
                 </div>
                 <div class="lang-switcher">
@@ -126,6 +126,9 @@
             </div>
 
             <div class="overlay-body">
+                <div class="overlay-watermark">
+                    <img src="{{ url_for('static', filename='dna_logo.png') }}" alt="DNA">
+                </div>
                 <div class="kpi-grid">
                     <div class="kpi-card risk">
                         <div class="kpi-label" data-i18n="results.risk">Riesgo</div>
@@ -183,7 +186,7 @@
                         </div>
                         <div class="detail-row">
                             <span class="detail-label" data-i18n="results.remaining_target">Faltante</span>
-                            <span class="detail-value"><span class="countup" data-target="{{ resultado.faltante_usd }}" data-prefix="$" data-decimals="2">$0.00</span></span>
+                            <span class="detail-value {% if resultado.balance_status == 'critical' or resultado.balance_status == 'warning' %}red{% elif resultado.profit_actual >= 0 %}green{% else %}yellow{% endif %}"><span class="countup" data-target="{{ resultado.faltante_usd }}" data-prefix="$" data-decimals="2">$0.00</span></span>
                         </div>
                     </div>
 
@@ -251,8 +254,12 @@
                                 <span class="detail-value">{{ resultado.target_porcentaje }}%</span>
                             </div>
                             <div class="detail-row">
-                                <span class="detail-label">Ops. Restantes</span>
+                                <span class="detail-label">Ops. para Target</span>
                                 <span class="detail-value">{{ resultado.operaciones_restantes }}</span>
+                            </div>
+                            <div class="detail-row">
+                                <span class="detail-label">Ops. antes de Blowout</span>
+                                <span class="detail-value {% if resultado.operaciones_perdedoras <= 3 %}red{% else %}green{% endif %}">{{ "%.1f"|format(resultado.operaciones_perdedoras) }}</span>
                             </div>
                             <div class="detail-row">
                                 <span class="detail-label">Payout Estimado</span>
@@ -261,10 +268,6 @@
                             <div class="detail-row">
                                 <span class="detail-label">Max Daily Loss</span>
                                 <span class="detail-value red">$<span class="countup" data-target="{{ resultado.daily_loss_usd }}" data-decimals="2">0.00</span></span>
-                            </div>
-                            <div class="detail-row">
-                                <span class="detail-label">Trades Perdedores</span>
-                                <span class="detail-value {% if resultado.operaciones_perdedoras <= 3 %}red{% else %}green{% endif %}">{{ resultado.operaciones_perdedoras }}</span>
                             </div>
                         </div>
                     </div>
@@ -366,17 +369,18 @@
         });
     }
 
-    document.querySelectorAll('.input-group select').forEach(function(select) {
+    document.querySelectorAll('.input-group input, .input-group select').forEach(function(el) {
         function update() {
-            select.closest('.input-group').classList.toggle('has-value', select.value !== '');
+            el.closest('.input-group').classList.toggle('has-value', el.value !== '');
         }
-        select.addEventListener('change', update);
-        select.addEventListener('focus', function() {
-            select.closest('.input-group').classList.add('has-value');
+        var event = el.tagName === 'SELECT' ? 'change' : 'input';
+        el.addEventListener(event, update);
+        el.addEventListener('focus', function() {
+            el.closest('.input-group').classList.add('has-value');
         });
-        select.addEventListener('blur', function() {
-            if (select.value === '') {
-                select.closest('.input-group').classList.remove('has-value');
+        el.addEventListener('blur', function() {
+            if (el.value === '') {
+                el.closest('.input-group').classList.remove('has-value');
             }
         });
         update();

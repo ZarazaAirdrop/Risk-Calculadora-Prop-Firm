@@ -48,6 +48,10 @@ body {
     width: auto;
 }
 
+.logo-zaraza img {
+    max-height: 58px;
+}
+
 .header-center {
     flex: 1;
     text-align: center;
@@ -326,6 +330,21 @@ select {
     padding: 20px 24px;
     overflow-y: auto;
     flex: 1;
+    position: relative;
+}
+
+.overlay-watermark {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    opacity: 0.06;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.overlay-watermark img {
+    max-height: 100px;
+    width: auto;
 }
 
 .overlay-body::-webkit-scrollbar {
@@ -632,6 +651,10 @@ select {
 
     .logo-wrapper img {
         max-height: 32px;
+    }
+
+    .logo-zaraza img {
+        max-height: 42px;
     }
 
     .overlay-panel {

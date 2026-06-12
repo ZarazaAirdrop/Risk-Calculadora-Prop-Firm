@@ -90,7 +90,7 @@ def index():
 
         # P&L (allows negatives now)
         profit_actual = balance - cuenta_inicial
-        faltante_usd = max(0, target_usd - max(0, profit_actual))
+        faltante_usd = max(0, target_usd - profit_actual)
         operaciones_restantes = faltante_usd / valor_tp_usd if valor_tp_usd > 0 else 0
 
         # Progress bar
