@@ -1,0 +1,66 @@
+{
+  "form": {
+    "title": "Configuração",
+    "challenge": "Desafio",
+    "phase": "Fase",
+    "phase1": "Fase 1",
+    "phase2": "Fase 2",
+    "account": "Tamanho da Conta",
+    "instrument": "Instrumento",
+    "balance": "Saldo Atual ($)",
+    "risk": "Risco (%)",
+    "entry": "Preço de Entrada",
+    "stop": "Stop Loss",
+    "take": "Take Profit",
+    "button": "Calcular Operação"
+  },
+  "results": {
+    "title": "Resultados",
+    "risk": "Risco",
+    "tp_gain": "Ganho TP",
+    "rr": "R:R",
+    "lots": "Lotes",
+    "profile": "Perfil",
+    "drawdown": "Drawdown",
+    "blowout": "Risco de Blowout",
+    "high": "Alto",
+    "moderate": "Moderado",
+    "low": "Baixo",
+    "target": "Meta",
+    "pnl": "P&L Atual",
+    "remaining_target": "Restante",
+    "daily_loss": "Daily Loss Restante",
+    "max_dd": "Max Drawdown",
+    "back": "Voltar",
+    "detail": "Ver detalhes completos",
+    "conservative": "Conservador",
+    "moderate_profile": "Moderado",
+    "aggressive": "Agressivo",
+    "very_aggressive": "Muito Agressivo"
+  },
+  "challenge": {
+    "title": "Status do Desafio",
+    "progress": "Progresso",
+    "profit": "P&L Atual",
+    "target": "Meta",
+    "remaining": "Restante",
+    "balance_health": "Saúde do Saldo",
+    "healthy": "Saudável",
+    "caution": "Cuidado",
+    "warning": "Aviso",
+    "critical": "Crítico"
+  },
+  "header": {
+    "title": "DNA Risk Calculator",
+    "subtitle": "Professional Prop Firm Risk Manager"
+  },
+  "footer": {
+    "designed": "Desenhado por",
+    "powered": "Powered by"
+  },
+  "lang": {
+    "es": "Español",
+    "en": "English",
+    "pt": "Português"
+  }
+}

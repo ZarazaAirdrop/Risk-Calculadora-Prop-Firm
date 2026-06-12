@@ -1,0 +1,66 @@
+{
+  "form": {
+    "title": "Settings",
+    "challenge": "Challenge",
+    "phase": "Phase",
+    "phase1": "Phase 1",
+    "phase2": "Phase 2",
+    "account": "Account Size",
+    "instrument": "Instrument",
+    "balance": "Current Balance ($)",
+    "risk": "Risk (%)",
+    "entry": "Entry Price",
+    "stop": "Stop Loss",
+    "take": "Take Profit",
+    "button": "Calculate Trade"
+  },
+  "results": {
+    "title": "Results",
+    "risk": "Risk",
+    "tp_gain": "TP Gain",
+    "rr": "R:R",
+    "lots": "Lots",
+    "profile": "Profile",
+    "drawdown": "Drawdown",
+    "blowout": "Blowout Risk",
+    "high": "High",
+    "moderate": "Moderate",
+    "low": "Low",
+    "target": "Target",
+    "pnl": "P&L",
+    "remaining_target": "Remaining",
+    "daily_loss": "Daily Loss Remaining",
+    "max_dd": "Max Drawdown",
+    "back": "Back",
+    "detail": "View full details",
+    "conservative": "Conservative",
+    "moderate_profile": "Moderate",
+    "aggressive": "Aggressive",
+    "very_aggressive": "Very Aggressive"
+  },
+  "challenge": {
+    "title": "Challenge Status",
+    "progress": "Progress",
+    "profit": "P&L",
+    "target": "Target",
+    "remaining": "Remaining",
+    "balance_health": "Balance Health",
+    "healthy": "Healthy",
+    "caution": "Caution",
+    "warning": "Warning",
+    "critical": "Critical"
+  },
+  "header": {
+    "title": "DNA Risk Calculator",
+    "subtitle": "Professional Prop Firm Risk Manager"
+  },
+  "footer": {
+    "designed": "Designed by",
+    "powered": "Powered by"
+  },
+  "lang": {
+    "es": "Español",
+    "en": "English",
+    "pt": "Português"
+  }
+}

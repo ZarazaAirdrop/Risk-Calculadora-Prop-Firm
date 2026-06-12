@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 
 from data.challenges import CHALLENGES
-from data.instruments import INSTRUMENTS
+from data.instruments import INSTRUMENTS, get_instrument_groups
 
 app = Flask(__name__)
 
@@ -66,8 +66,8 @@ def index():
         # Units
         if tipo == "forex":
             unidad = "pips"
-        elif tipo == "gold":
-            unidad = "pips oro"
+        elif tipo == "gold" or tipo == "commodity":
+            unidad = "pips"
         elif tipo == "index":
             unidad = "puntos"
         else:
@@ -188,7 +188,8 @@ def index():
         "index.html",
         resultado=resultado,
         challenge_info=challenge_info,
-        challenges=CHALLENGES
+        challenges=CHALLENGES,
+        instrument_groups=get_instrument_groups()
     )
 
 
