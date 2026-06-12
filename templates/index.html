@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DNA Funded Risk Calculator v0.7</title>
+    <title>Prop Firm Risk Calculator v1.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
                 <img src="{{ url_for('static', filename='dna_logo.png') }}" alt="DNA">
             </div>
             <div class="header-center">
-                <h1 class="main-title">DNA Risk Calculator</h1>
+                <h1 class="main-title">Prop Firm Risk Calculator</h1>
                 <p class="subtitle" data-i18n="header.subtitle">Professional Prop Firm Risk Manager</p>
             </div>
             <div class="header-right">
@@ -278,8 +278,12 @@
     {% endif %}
 
     <footer class="footer">
-        <p>DNA Funded Risk Calculator v0.7</p>
-        <p data-i18n="footer.designed">Dise&ntilde;ado por <strong>Zaraza</strong> &mdash; <span data-i18n="footer.powered">Powered by <strong>DNA Funded</strong></span></p>
+        <p>Prop Firm Risk Calculator v1.0</p>
+        <p>Dise&ntilde;ado por <strong>Latin Labs Traders</strong></p>
+        <div class="footer-logo">
+            <img src="{{ url_for('static', filename='zaraza_logo.png') }}" alt="Latin Labs Traders">
+        </div>
+        <p>Powered by <strong>opencode</strong> &mdash; AI Agent</p>
     </footer>
 
 </div>

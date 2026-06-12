@@ -609,6 +609,21 @@ select {
     color: #94a3b8;
 }
 
+.footer-logo {
+    margin: 8px 0;
+}
+
+.footer-logo img {
+    max-height: 36px;
+    width: auto;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.footer-logo img:hover {
+    opacity: 0.8;
+}
+
 /* ========== SCROLLBAR ========== */
 
 ::-webkit-scrollbar {
